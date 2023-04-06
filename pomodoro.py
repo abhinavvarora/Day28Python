@@ -76,14 +76,14 @@ class TimerApp:
         if self.timer_running and not self.timer_paused:
             self.minutes = self.time_left // 60
             self.seconds = self.time_left % 60
-            time_string = f"{self.minutes:01d}:{self.seconds:01d}"
+            time_string = f"{self.minutes:02d}:{self.seconds:02d}"
             self.timer_label.config(text=time_string)
         if self.time_left > 0 and not self.timer_paused:
             self.time_left -= 1
             self.master.after(1000, self.update_timer)
         else:
             self.timer_running = False
-            time_string = f"{self.minutes:01d}:{self.seconds:01d}"
+            time_string = f"{self.minutes:02d}:{self.seconds:02d}"
             self.timer_label.config(text=time_string)
 
 root = tk.Tk()
