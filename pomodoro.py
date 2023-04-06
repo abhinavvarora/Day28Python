@@ -20,9 +20,16 @@ class TimerApp:
         self.start_button = tk.Button(self.master, text="Start", command=self.start_timer)
         self.start_button.pack(pady=10)
 
-        self.stop_button = tk.Button(self.master)
+        self.stop_button = tk.Button(self.master, text="Stop", command=self.stop_timer)
+        self.stop_button
+        self.stop_button.pack(pady=20)
         
-        self.time_left = 25*60
+        self.max_minutes = 25
+        self.max_seconds = 0
+        self.minutes = 0
+        self.seconds = 0
+                
+        self.time_left = self.max_minutes*60 + self.max_seconds
         self.timer_running = False
 
         self.timer_entry = tk.Entry(self.master)
@@ -33,29 +40,39 @@ class TimerApp:
 
     def set_timer(self):
         try:
-            self.time_left = int(self.timer_entry.get().split(":")[0])*60 + int(self.timer_entry.get().split(":")[1])
-            self.timer_label.config(text=f"{self.time_left//60:02d}:{self.time_left%60:02d}")
+            self.minutes = int(self.timer_entry.get().split(":")[0])*60
+            self.seconds = int(self.timer_entry.get().split(":")[1])
+            self.timer_label.config(text=f"{self.minutes*60:02d}:{self.seconds:02d}")
         except ValueError:
             pass
-
+    
+    def stop_timer(self):
+        self.timer_running = False
+        self.minutes = 0
+        self.seconds = 0
+        self.time_left = 0
+        self.update_timer()
+        
     def start_timer(self):
+        if 
         if not self.timer_running:
-            self.timer_label.config(text=f"{self.time_left:02d}:00")
+            self.timer_label.config(text=f"{self.minutes:02d}:{self.seconds:02d}")
             self.timer_running = True
             self.update_timer()
 
     def update_timer(self):
         if self.timer_running:
-            minutes = self.time_left // 60
-            seconds = self.time_left % 60
-            time_string = f"{minutes:02d}:{seconds:02d}"
+            self.minutes = self.time_left // 60
+            self.seconds = self.time_left % 60
+            time_string = f"{self.minutes:02d}:{self.seconds:02d}"
             self.timer_label.config(text=time_string)
         if self.time_left > 0:
             self.time_left -= 1
             self.master.after(1000, self.update_timer)
         else:
             self.timer_running = False
-            self.timer_label.config(text="Time's up!")
+            time_string = f"{self.minutes:02d}:{self.seconds:02d}"
+            self.timer_label.config(text=time_string)
 
 root = tk.Tk()
 app = TimerApp(root)
