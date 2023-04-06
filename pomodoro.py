@@ -1,11 +1,15 @@
 #TODO #1 Make a label housing timer
+#TODO 1st Done
 #TODO #2 Put an image of a tomato at the center of the window
 #TODO #3 Make the image clickable and have it pause or start the timer
 #TODO #4 Add increment button to increase current timer by 1 min
+#TODO 4th Deprecated
 #TODO #5 Have a sound ring out when timer hits 0
 #TODO #6 Replace the image with a GIF of it turning big and then small back again when timer hits 0
-#TODO #7 Make a field to set the maximum timer and make it so that it does not affect running or paused timer
+#TODO #7 Make a field to set the maximum timer
+#TODO 7th Done
 #TODO #8 Make a stop button
+#TODO 8th Done
 #TODO #9 Draw from a txt file motivational messages, display them above the pomodo tomato and change them periodically
 
 import tkinter as tk
@@ -24,6 +28,9 @@ class TimerApp:
         self.stop_button
         self.stop_button.pack(pady=20)
         
+        self.pause_button = tk.Button(self.master, text="Pause", command=self.pause_timer)
+        self.pause_button.pack(pady=20)
+        
         self.max_minutes = 25
         self.max_seconds = 0
         self.minutes = 0
@@ -40,25 +47,28 @@ class TimerApp:
 
     def set_timer(self):
         try:
-            self.minutes = int(self.timer_entry.get().split(":")[0])*60
-            self.seconds = int(self.timer_entry.get().split(":")[1])
-            self.timer_label.config(text=f"{self.minutes*60:02d}:{self.seconds:02d}")
+            self.max_minutes = self.minutes = int(self.timer_entry.get().split(":")[0])
+            self.max_seconds = self.seconds = int(self.timer_entry.get().split(":")[1])
+            self.time_left = self.minutes*60 + self.seconds
         except ValueError:
             pass
     
     def stop_timer(self):
-        self.timer_running = False
         self.minutes = 0
         self.seconds = 0
         self.time_left = 0
-        self.update_timer()
+        self.timer_running = False
         
     def start_timer(self):
-        if 
-        if not self.timer_running:
-            self.timer_label.config(text=f"{self.minutes:02d}:{self.seconds:02d}")
-            self.timer_running = True
-            self.update_timer()
+        if self.time_left == 0:
+            self.minutes = self.max_minutes
+            self.seconds = self.max_seconds
+            self.time_left = self.max_minutes*60 + self.max_seconds
+        self.timer_running = True
+        self.update_timer()
+        
+    def pause_timer(self):
+        self.timer_running = False
 
     def update_timer(self):
         if self.timer_running:
