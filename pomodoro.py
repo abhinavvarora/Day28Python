@@ -38,6 +38,8 @@ class TimerApp:
             self.max_minutes = self.minutes = int(self.timer_entry.get().split(":")[0])
             self.max_seconds = self.seconds = int(self.timer_entry.get().split(":")[1])
             self.time_left = self.minutes*60 + self.seconds
+            self.max_minutes = self.time_left//60
+            self.max_seconds = self.time_left%60
         except ValueError:
             pass
     
@@ -50,9 +52,12 @@ class TimerApp:
         self.timer_label.config(text=f"{self.minutes:02d}:{self.seconds:02d}")
         
     def start_timer(self):
-        self.timer_running = True
-        self.timer_paused = False
-        self.update_timer()
+        if self.timer_running:
+            pass
+        else:
+            self.timer_running = True
+            self.timer_paused = False
+            self.update_timer()
         
     def pause_timer(self):
         self.timer_paused = True
