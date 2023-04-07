@@ -38,6 +38,8 @@ class TimerApp:
             self.max_minutes = self.minutes = int(self.timer_entry.get().split(":")[0])
             self.max_seconds = self.seconds = int(self.timer_entry.get().split(":")[1])
             self.time_left = self.minutes*60 + self.seconds
+            self.max_minutes = self.time_left//60
+            self.max_seconds = self.time_left%60
         except ValueError:
             pass
     
