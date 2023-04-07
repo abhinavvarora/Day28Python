@@ -1,35 +1,20 @@
-#TODO #1 Make a label housing timer
-#TODO 1st Done
-#TODO #2 Put an image of a tomato at the center of the window
-#TODO #3 Make the image clickable and have it pause or start the timer
-#TODO #4 Add increment button to increase current timer by 1 min
-#TODO 4th Deprecated
-#TODO #5 Have a sound ring out when timer hits 0
-#TODO #6 Replace the image with a GIF of it turning big and then small back again when timer hits 0
-#TODO #7 Make a field to set the maximum timer
-#TODO 7th Done
-#TODO #8 Make a stop button
-#TODO 8th Done
-#TODO #9 Draw from a txt file motivational messages, display them above the pomodo tomato and change them periodically
-
 import tkinter as tk
-
 class TimerApp:
     def __init__(self, master):
         self.master = master
-        self.master.title("Timer App")
+        self.master.title("Pomodoro")
         self.timer_label = tk.Label(self.master, text="25:00", font=("Arial", 24))
-        self.timer_label.pack(pady=20)
+        self.timer_label.grid(column=2, row=4)
 
         self.start_button = tk.Button(self.master, text="Start", command=self.start_timer)
-        self.start_button.pack(pady=10)
+        self.start_button.grid(column=1, row=5)
 
-        self.stop_button = tk.Button(self.master, text="Stop", command=self.stop_timer)
-        self.stop_button.pack(pady=20)
-        
         self.pause_button = tk.Button(self.master, text="Pause", command=self.pause_timer)
-        self.pause_button.pack(pady=20)
+        self.pause_button.grid(column=2, row=5)
         
+        self.stop_button = tk.Button(self.master, text="Stop", command=self.stop_timer)
+        self.stop_button.grid(column=3, row=5)
+
         self.max_minutes = 25
         self.max_seconds = 0
         self.minutes = 0
@@ -38,12 +23,15 @@ class TimerApp:
         self.time_left = self.max_minutes*60 + self.max_seconds
         self.timer_running = False
         self.timer_paused = False
+        
+        self.timer_entry_label = tk.Label(text="Enter timer length")
+        self.timer_entry_label.grid(column=1, row=6)
 
         self.timer_entry = tk.Entry(self.master)
-        self.timer_entry.pack(pady=10)
+        self.timer_entry.grid(column=2, row=6)
 
         self.set_timer_button = tk.Button(self.master, text="Set Timer", command=self.set_timer)
-        self.set_timer_button.pack(pady=10)
+        self.set_timer_button.grid(column=3, row=6)
 
     def set_timer(self):
         try:
@@ -54,17 +42,14 @@ class TimerApp:
             pass
     
     def stop_timer(self):
-        self.minutes = 0
-        self.seconds = 0
-        self.time_left = 0
         self.timer_running = False
-        self.timer_paused = False
+        self.timer_paused = True
+        self.minutes = self.max_minutes
+        self.seconds = self.max_seconds
+        self.time_left = self.minutes*60 + self.seconds
+        self.timer_label.config(text=f"{self.minutes:02d}:{self.seconds:02d}")
         
     def start_timer(self):
-        if self.time_left == 0:
-            self.minutes = self.max_minutes
-            self.seconds = self.max_seconds
-            self.time_left = self.max_minutes*60 + self.max_seconds
         self.timer_running = True
         self.timer_paused = False
         self.update_timer()
