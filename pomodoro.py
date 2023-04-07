@@ -52,9 +52,12 @@ class TimerApp:
         self.timer_label.config(text=f"{self.minutes:02d}:{self.seconds:02d}")
         
     def start_timer(self):
-        self.timer_running = True
-        self.timer_paused = False
-        self.update_timer()
+        if self.timer_running:
+            pass
+        else:
+            self.timer_running = True
+            self.timer_paused = False
+            self.update_timer()
         
     def pause_timer(self):
         self.timer_paused = True
