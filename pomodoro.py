@@ -15,14 +15,17 @@ class TimerApp:
         self.stop_button = tk.Button(self.master, text="Stop", command=self.stop_timer)
         self.stop_button.grid(column=3, row=5)
 
-        self.max_minutes = 25
-        self.max_seconds = 0
+        self.work_max_minutes = 25
+        self.work_max_seconds = 0
         self.minutes = 0
         self.seconds = 0
+        self.break_max_minutes = 5
+        self.break_max_seconds = 0
                 
-        self.time_left = self.max_minutes*60 + self.max_seconds
+        self.time_left = self.work_max_minutes*60 + self.work_max_seconds
         self.timer_running = False
         self.timer_paused = False
+        self.timer_type = "Work"
         
         self.timer_entry_label = tk.Label(text="Enter timer length")
         self.timer_entry_label.grid(column=1, row=6)
@@ -32,22 +35,20 @@ class TimerApp:
 
         self.set_timer_button = tk.Button(self.master, text="Set Timer", command=self.set_timer)
         self.set_timer_button.grid(column=3, row=6)
-
+        
     def set_timer(self):
         try:
-            self.max_minutes = self.minutes = int(self.timer_entry.get().split(":")[0])
-            self.max_seconds = self.seconds = int(self.timer_entry.get().split(":")[1])
+            max_timer_list = self.timer_entry.get().split(":")
+            self.minutes = int(max_timer_list[0])
+            self.seconds = int(max_timer_list[1])
             self.time_left = self.minutes*60 + self.seconds
-            self.max_minutes = self.time_left//60
-            self.max_seconds = self.time_left%60
+            self.timer_label.config(text=f"{self.minutes:02d}:{self.seconds:02d}")
         except ValueError:
             pass
     
     def stop_timer(self):
         self.timer_running = False
         self.timer_paused = True
-        self.minutes = self.max_minutes
-        self.seconds = self.max_seconds
         self.time_left = self.minutes*60 + self.seconds
         self.timer_label.config(text=f"{self.minutes:02d}:{self.seconds:02d}")
         
@@ -75,6 +76,16 @@ class TimerApp:
             self.timer_running = False
             time_string = f"{self.minutes:02d}:{self.seconds:02d}"
             self.timer_label.config(text=time_string)
+            if self.timer_type == "Work":
+                self.timer_type = "Break"
+                self.minutes = self.break_max_minutes
+                self.seconds = self.break_max_seconds
+            else:
+                self.timer_type = "Work"
+                self.minutes = self.work_max_minutes
+                self.seconds = self.work_max_seconds
+            self.time_left = self.minutes*60 + self.seconds
+            self.timer_label.config(text=f"{self.minutes:02d}:{self.seconds:02d}")
 
 root = tk.Tk()
 app = TimerApp(root)
