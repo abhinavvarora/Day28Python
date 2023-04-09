@@ -1,10 +1,20 @@
 import tkinter as tk
 import threading
 import playsound
+import pandas
+import random
+
 class TimerApp:
     def __init__(self, master):
         self.master = master
         self.master.title("Pomodoro")
+        
+        self.df = pandas.read_excel("data/Motivational Quotes Database.xlsx")
+        self.shown_before = []
+        
+        self.motivation_label = tk.Label()
+        self.change_quote()
+        self.motivation_label.grid(column=2, row=2)
         
         self.timer_type = "Work"
         self.timer_type_label = tk.Label(text=self.timer_type)
@@ -41,6 +51,14 @@ class TimerApp:
 
         self.set_timer_button = tk.Button(self.master, text="Set Timer", command=self.set_timer)
         self.set_timer_button.grid(column=3, row=6)
+        
+    def change_quote(self):
+        rand_num = random.randint(5, 45579)
+        if rand_num in self.shown_before:
+            self.change_quote()
+        self.shown_before.append(rand_num)
+        quote, author, category = self.df.iloc[rand_num]
+        self.motivation_label.config(text=(quote.strip(".") + " - " + author))
         
     def play_sound(self, sound_path):
         playsound.playsound(sound_path)
@@ -82,6 +100,7 @@ class TimerApp:
             self.time_left -= 1
             self.master.after(1000, self.update_timer)
         else:
+            self.change_quote()
             self.timer_running = False
             time_string = f"{self.minutes:02d}:{self.seconds:02d}"
             self.timer_label.config(text=time_string)
