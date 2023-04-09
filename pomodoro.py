@@ -1,4 +1,6 @@
 import tkinter as tk
+import threading
+import playsound
 class TimerApp:
     def __init__(self, master):
         self.master = master
@@ -39,6 +41,9 @@ class TimerApp:
 
         self.set_timer_button = tk.Button(self.master, text="Set Timer", command=self.set_timer)
         self.set_timer_button.grid(column=3, row=6)
+        
+    def play_sound(self, sound_path):
+        playsound.playsound(sound_path)
         
     def set_timer(self):
         try:
@@ -84,10 +89,14 @@ class TimerApp:
                 self.timer_type = "Break"
                 self.minutes = self.break_max_minutes
                 self.seconds = self.break_max_seconds
+                sound_thread = threading.Thread(target=self.play_sound, args=("sounds/break_bell.wav", ))
+                sound_thread.start()
             else:
                 self.timer_type = "Work"
                 self.minutes = self.work_max_minutes
                 self.seconds = self.work_max_seconds
+                sound_thread = threading.Thread(target=self.play_sound, args=("sounds/work_bell.wav", ))
+                sound_thread.start()
             self.time_left = self.minutes*60 + self.seconds
             self.timer_label.config(text=f"{self.minutes:02d}:{self.seconds:02d}")
             self.timer_type_label.config(text=self.timer_type)
