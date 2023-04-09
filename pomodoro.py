@@ -3,6 +3,11 @@ class TimerApp:
     def __init__(self, master):
         self.master = master
         self.master.title("Pomodoro")
+        
+        self.timer_type = "Work"
+        self.timer_type_label = tk.Label(text=self.timer_type)
+        self.timer_type_label.grid(column=2, row=3)
+        
         self.timer_label = tk.Label(self.master, text="25:00", font=("Arial", 24))
         self.timer_label.grid(column=2, row=4)
 
@@ -25,7 +30,6 @@ class TimerApp:
         self.time_left = self.work_max_minutes*60 + self.work_max_seconds
         self.timer_running = False
         self.timer_paused = False
-        self.timer_type = "Work"
         
         self.timer_entry_label = tk.Label(text="Enter timer length")
         self.timer_entry_label.grid(column=1, row=6)
@@ -86,6 +90,7 @@ class TimerApp:
                 self.seconds = self.work_max_seconds
             self.time_left = self.minutes*60 + self.seconds
             self.timer_label.config(text=f"{self.minutes:02d}:{self.seconds:02d}")
+            self.timer_type_label.config(text=self.timer_type)
 
 root = tk.Tk()
 app = TimerApp(root)
