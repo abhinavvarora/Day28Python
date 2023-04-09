@@ -3,22 +3,30 @@ import threading
 import playsound
 import pandas
 import random
+from PIL import Image, ImageTk
+import textwrap
 
 class TimerApp:
     def __init__(self, master):
         self.master = master
+        # self.master.geometry("1200x500")
+        # self.master.resizable(False, False)
         self.master.title("Pomodoro")
         
         self.df = pandas.read_excel("data/Motivational Quotes Database.xlsx")
         self.shown_before = []
         
-        self.motivation_label = tk.Label()
+        self.motivation_label = tk.Label(self.master)
         self.change_quote()
         self.motivation_label.grid(column=2, row=2)
         
         self.timer_type = "Work"
-        self.timer_type_label = tk.Label(text=self.timer_type)
+        self.timer_type_label = tk.Label(self.master, text=self.timer_type)
         self.timer_type_label.grid(column=2, row=3)
+        
+        self.tomato_photo = ImageTk.PhotoImage(Image.open("images/tomato.png").resize((300, 300)))
+        self.tomato = tk.Label(self.master, image=self.tomato_photo)
+        self.tomato.grid(column=2, row=4)
         
         self.timer_label = tk.Label(self.master, text="25:00", font=("Arial", 24))
         self.timer_label.grid(column=2, row=4)
@@ -58,7 +66,10 @@ class TimerApp:
             self.change_quote()
         self.shown_before.append(rand_num)
         quote, author, category = self.df.iloc[rand_num]
-        self.motivation_label.config(text=(quote.strip(".") + " - " + author))
+        full_text=quote.strip(".") + " - " + author
+        max_width = 100
+        lines = textwrap.wrap(full_text, width = max_width)
+        self.motivation_label.config(text="\n".join(lines))
         
     def play_sound(self, sound_path):
         playsound.playsound(sound_path)
